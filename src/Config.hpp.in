@@ -1,0 +1,6 @@
+#pragma once
+
+#define VERSION "@VERSION_MAJOR@.@VERSION_MINOR@"
+#define NAME "@PROJECT_NAME@"
+#define CMAKE_@CMAKE_BUILD_TYPE@
+#define OS_@OPERATINGSYSTEM@
