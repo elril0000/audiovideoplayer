@@ -92,18 +92,8 @@ void MainWin::exitFullscreen(bool isFullscreen)
 
 void MainWin::addMedia()
 {
-	QFileDialog *openFiles = new QFileDialog(this);
-	openFiles->setFileMode(QFileDialog::ExistingFiles);
+	QStringList media = QFileDialog::getOpenFileNames(this, tr("Add Musics"), QDir::homePath(), tr("Music and Video(*.avi *.mp4 *.mkv *.wmv *.flv *.ogg *.mp3 *.wma *.wav *.flac *.m4a);;Music (*.mp3 *.wma *.wav *.flac *.m4a *.ogg);;Video (*.avi *.mp4 *.mkv *.wmv *.flv *.ogg)"));
 	
-	QStringList filters;
-	filters << tr("Music and Video(*.avi *.mp4 *.mkv *.wmv *.flv *.ogg *.mp3 *.wma *.wav *.flac *.m4a)") << tr("Music (*.mp3 *.wma *.wav *.flac *.m4a *.ogg)") << tr("Video (*.avi *.mp4 *.mkv *.wmv *.flv *.ogg)");
-	openFiles->setNameFilters(filters);
-	
-	openFiles->setViewMode(QFileDialog::Detail);
-	
-	QStringList media;
-	if(openFiles->exec())
-		media = openFiles->selectedFiles();
 	bool isEmpty;
 	if(_playlistModel->playlist()->isEmpty())
 		isEmpty = true;
@@ -276,7 +266,8 @@ void MainWin::quitFullscreen()
 }
 
 void MainWin::setCenter()
-{	cout << _videoFrame->size().width() << endl << _videoFrame->size().height() << endl;
+{
+	cout << _videoFrame->size().width() << endl << _videoFrame->size().height() << endl;
 	//_videoWidgetWindow->setGeometry((_videoFrame->size().width() / 2) - (900 / 2), _videoFrame->size().height() - 75, 900, 75);
 	QDesktopWidget *desktop = QApplication::desktop();
 	_videoWidgetWindow->setGeometry((desktop->screen(desktop->screenNumber(_videoFrame))->size().width() / 2) - (900 / 2) + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().x(), desktop->screen(desktop->screenNumber(_videoFrame))->size().height() - 75, 900, 75);
