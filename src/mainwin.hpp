@@ -47,6 +47,7 @@ public slots:
 	void init();
 	void volumeChanged(int volume);
 	void quitFullscreen();
+	void setCenter();
 	
 signals:
 	void done();
@@ -111,7 +112,7 @@ class VideoWidgetWindow : public QWidget
 {
 	Q_OBJECT
 public:
-    VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* playlistModel, VideoWidget* videoframe, MainWin* parent);
+    VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* playlistModel, VideoWidget* videoframe, MainWin* mainWin);
 	
 public slots:
 	void currentState(QMediaPlayer::State state);
@@ -130,7 +131,7 @@ protected:
 	virtual void keyPressEvent(QKeyEvent* event);
 	
 private:
-	MainWin *_parent;
+	MainWin *_mainWin;
 	QPushButton *_playPauseButton;
 	QPushButton *_previousButton;
 	QPushButton *_stopButton;

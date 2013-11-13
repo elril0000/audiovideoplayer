@@ -264,10 +264,8 @@ void MainWin::fullscreen()
 	_videoFrame->setWindowState(Qt::WindowMaximized);
 	_videoFrame->setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 	_videoFrame->show();
-	_videoWidgetWindow->show();
-	QRect screenres = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(_videoFrame));
-	_videoWidgetWindow->setGeometry((QApplication::desktop()->screen(QApplication::desktop()->screenNumber(_videoFrame))->width() / 2) - (900 / 2) - screenres.x(), QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->height() - 75, 900, 75);
-
+	
+	QTimer::singleShot(1000, this, SLOT(setCenter()));
 }
 
 void MainWin::quitFullscreen()
@@ -275,6 +273,16 @@ void MainWin::quitFullscreen()
 	delete _videoFrame;
 	createMainWin();
 	_videoWidgetWindow->deleteLater();
+}
+
+void MainWin::setCenter()
+{	cout << _videoFrame->size().width() << endl << _videoFrame->size().height() << endl;
+	//_videoWidgetWindow->setGeometry((_videoFrame->size().width() / 2) - (900 / 2), _videoFrame->size().height() - 75, 900, 75);
+	QDesktopWidget *desktop = QApplication::desktop();
+	_videoWidgetWindow->setGeometry((desktop->screen(desktop->screenNumber(_videoFrame))->size().width() / 2) - (900 / 2) + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().x(), desktop->screen(desktop->screenNumber(_videoFrame))->size().height() - 75, 900, 75);
+	cout << desktop->screen(desktop->screenNumber(_videoFrame))->size().width() << endl << desktop->screen(desktop->screenNumber(_videoFrame))->size().height() << endl;
+	_videoWidgetWindow->show();
+	
 }
 
 void MainWin::createToolbar()
@@ -521,7 +529,7 @@ void MainWin::doubleClickPlaylist(const QModelIndex& index)
 	_mediaPlayer->play();
 }
 
-VideoWidgetWindow::VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* playlistModel, VideoWidget* videoframe, MainWin* parent): _parent(parent)
+VideoWidgetWindow::VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* playlistModel, VideoWidget* videoframe, MainWin* mainWin): _mainWin(mainWin)
 {
 	_playlistModel = playlistModel;
 	_videoFrame = videoframe;
@@ -591,12 +599,12 @@ VideoWidgetWindow::VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* p
 	currentState(_mediaPlayer->state());
 	
 	durationChanged(_mediaPlayer->duration());
-	connect(_playPauseButton, SIGNAL(clicked()), _parent, SLOT(playPause()));
-	connect(_stopButton, SIGNAL(clicked(bool)), _parent, SLOT(stop()));
-	connect(_nextButton, SIGNAL(clicked(bool)), _parent, SLOT(next()));
-	connect(_previousButton, SIGNAL(clicked(bool)), _parent, SLOT(previous()));
+	connect(_playPauseButton, SIGNAL(clicked()), _mainWin, SLOT(playPause()));
+	connect(_stopButton, SIGNAL(clicked(bool)), _mainWin, SLOT(stop()));
+	connect(_nextButton, SIGNAL(clicked(bool)), _mainWin, SLOT(next()));
+	connect(_previousButton, SIGNAL(clicked(bool)), _mainWin, SLOT(previous()));
 	connect(_muteButton, SIGNAL(clicked(bool)), _mediaPlayer, SLOT(setMuted(bool)));
-	connect(_fullscreenButton, SIGNAL(clicked(bool)), _parent, SLOT(quitFullscreen()));
+	connect(_fullscreenButton, SIGNAL(clicked(bool)), _mainWin, SLOT(quitFullscreen()));
 	connect(_mediaPlayer, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(currentState(QMediaPlayer::State)));
 	connect(_mediaPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
 	connect(_seekSlider, SIGNAL(sliderMoved(int)), this, SLOT(seekChanged(int)));
@@ -632,7 +640,7 @@ void VideoWidgetWindow::positionChanged(qint64 pos)
 {
 	_seekSlider->setValue(pos);
 	int hour, minutes, seconds;
-	_parent->toTime(pos, minutes, seconds);
+	_mainWin->toTime(pos, minutes, seconds);
 	
 	std::stringstream ss;
 	if(minutes >= 60)
@@ -669,7 +677,7 @@ void VideoWidgetWindow::durationChanged(qint64 duration)
 {
 	_seekSlider->setRange(0, duration);
 	int hour, minutes, seconds;
-	_parent->toTime(duration, minutes, seconds);
+	_mainWin->toTime(duration, minutes, seconds);
 	std::stringstream ss;
 	if(minutes >= 60)
 	{
@@ -728,19 +736,19 @@ void VideoWidgetWindow::keyPressEvent(QKeyEvent* event)
 	{
 		case Qt::Key::Key_Escape:
 			if(windowState() == Qt::WindowActive | Qt::WindowMaximized)
-				_parent->quitFullscreen();
+				_mainWin->quitFullscreen();
 			break;
 		
 		case Qt::Key::Key_Space:
-			_parent->playPause();
+			_mainWin->playPause();
 			break;
 			
 		case Qt::Key::Key_Right:
-			_parent->next();
+			_mainWin->next();
 			break;
 			
 		case Qt::Key::Key_Left:
-			_parent->previous();
+			_mainWin->previous();
 			break;
 			
 		default:
@@ -749,3 +757,4 @@ void VideoWidgetWindow::keyPressEvent(QKeyEvent* event)
 	}
     _timer->start(5000);
 }
+
