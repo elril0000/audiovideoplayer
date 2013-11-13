@@ -267,11 +267,8 @@ void MainWin::quitFullscreen()
 
 void MainWin::setCenter()
 {
-	cout << _videoFrame->size().width() << endl << _videoFrame->size().height() << endl;
-	//_videoWidgetWindow->setGeometry((_videoFrame->size().width() / 2) - (900 / 2), _videoFrame->size().height() - 75, 900, 75);
 	QDesktopWidget *desktop = QApplication::desktop();
 	_videoWidgetWindow->setGeometry((desktop->screen(desktop->screenNumber(_videoFrame))->size().width() / 2) - (900 / 2) + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().x(), desktop->screen(desktop->screenNumber(_videoFrame))->size().height() - 75, 900, 75);
-	cout << desktop->screen(desktop->screenNumber(_videoFrame))->size().width() << endl << desktop->screen(desktop->screenNumber(_videoFrame))->size().height() << endl;
 	_videoWidgetWindow->show();
 	
 }
@@ -712,6 +709,7 @@ void VideoWidgetWindow::mouseMoveEvent(QMouseEvent* event)
 
 void VideoWidgetWindow::hideVideoWidget()
 {
+	releaseMouse();
 	setVisible(false);
 	emit hiding();
 }

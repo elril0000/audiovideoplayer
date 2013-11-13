@@ -13,7 +13,9 @@ VideoWidget::VideoWidget(MainWin* parent, VideoWidgetWindow* videoWidgetWindow):
 void VideoWidget::hideVideoWidget()
 {
 	setWindowState(Qt::WindowActive | Qt::WindowMaximized);
+	raise();
 	activateWindow();
+	grabMouse();
 }
 
 void VideoWidget::keyPressEvent(QKeyEvent* event)
@@ -43,6 +45,7 @@ void VideoWidget::keyPressEvent(QKeyEvent* event)
 	}
 	if(_videoWidgetWindow != 0)
 	{
+		releaseMouse();
 		_videoWidgetWindow->setVisible(true);
 		_videoWidgetWindow->setWindowState(Qt::WindowActive);
 		_videoWidgetWindow->timer()->start(5000);
@@ -53,6 +56,7 @@ void VideoWidget::mousePressEvent(QMouseEvent* event)
 {
 	if(_videoWidgetWindow != 0)
 	{
+		releaseMouse();
 		_videoWidgetWindow->setVisible(true);
 		_videoWidgetWindow->setWindowState(Qt::WindowActive);
 		_videoWidgetWindow->activateWindow();
@@ -66,6 +70,7 @@ void VideoWidget::mouseMoveEvent(QMouseEvent* event)
 {
     if(_videoWidgetWindow != 0)
 	{
+		releaseMouse();
 		_videoWidgetWindow->setVisible(true);
 		_videoWidgetWindow->setWindowState(Qt::WindowActive);
 		_videoWidgetWindow->activateWindow();
