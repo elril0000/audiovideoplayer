@@ -115,7 +115,7 @@ void MainWin::removeMedia()
 void MainWin::changeSelection(int pos)
 {
 	//_playlistView->setCurrentIndex(_playlistModel->index(pos));
-	setWindowTitle(tr("Audio Video Player - Playing : ") + _playlistModel->index(pos).data().toString());
+	setWindowTitle(tr("Simple Audio and Video Player - Playing : ") + _playlistModel->index(pos).data().toString());
 	
 	for(int i = 0 ; i < _playlistModel->rowCount() ; i++)
 	{
@@ -347,17 +347,17 @@ void MainWin::currentState(QMediaPlayer::State state)
 	{
 		case QMediaPlayer::PausedState:
 			_playPauseAction->setIcon(QIcon::fromTheme("media-playback-start"));
-			setWindowTitle(tr("Audio Video Player - Paused"));
+			setWindowTitle(tr("Simple Audio and Video Player - Paused"));
 			break;
 		
 		case QMediaPlayer::PlayingState:
 			_playPauseAction->setIcon(QIcon::fromTheme("media-playback-pause"));
-			setWindowTitle(tr("Audio Video Player - Playing : ") + _playlistModel->index(_playlistModel->playlist()->currentIndex()).data().toString());
+			setWindowTitle(tr("Simple Audio and Video Player - Playing : ") + _playlistModel->index(_playlistModel->playlist()->currentIndex()).data().toString());
 			break;
 			
 		case QMediaPlayer::StoppedState:
 			_playPauseAction->setIcon(QIcon::fromTheme("media-playback-start"));
-			setWindowTitle(tr("Audio Video Player - Stopped"));
+			setWindowTitle(tr("Simple Audio and Video Player - Stopped"));
 			break;
 			
 		default:
@@ -424,7 +424,7 @@ void MainWin::setProperties()
 	
 	resize(800, 600);
 	
-	setWindowTitle(tr("Audio Video Player - Stopped"));
+	setWindowTitle(tr("Simple Audio and Video Player - Stopped"));
 }
 
 void MainWin::show()
