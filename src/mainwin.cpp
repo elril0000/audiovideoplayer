@@ -27,7 +27,6 @@ void MainWin::init()
 	connect(_playlistModel->playlist(), SIGNAL(loaded()), this, SLOT(loaded()));
 	connect(_playlistModel->playlist(), SIGNAL(loadFailed()), this, SLOT(loadFailed()));
 	connect(_mediaPlayer, SIGNAL(volumeChanged(int)), this, SLOT(volumeChanged(int)));
-	
 	show();
 }
 
@@ -254,7 +253,6 @@ void MainWin::fullscreen()
 	_videoFrame->setWindowState(Qt::WindowMaximized);
 	_videoFrame->setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 	_videoFrame->show();
-	
 	QTimer::singleShot(1000, this, SLOT(setCenter()));
 }
 
@@ -617,6 +615,7 @@ void VideoWidgetWindow::currentState(QMediaPlayer::State state)
 			
 		case QMediaPlayer::StoppedState:
 			_playPauseButton->setIcon(QIcon::fromTheme("media-playback-start"));
+			_mainWin->quitFullscreen();
 			break;
 			
 		default:

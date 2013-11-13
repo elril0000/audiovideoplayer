@@ -16,10 +16,12 @@ void VideoWidget::hideVideoWidget()
 	raise();
 	activateWindow();
 	grabMouse();
+	qApp->setOverrideCursor(Qt::BlankCursor);
 }
 
 void VideoWidget::keyPressEvent(QKeyEvent* event)
 {
+	qApp->setOverrideCursor(Qt::ArrowCursor);
 	switch(event->key())
 	{
 		case Qt::Key::Key_Escape:
@@ -54,6 +56,7 @@ void VideoWidget::keyPressEvent(QKeyEvent* event)
 
 void VideoWidget::mousePressEvent(QMouseEvent* event)
 {
+	qApp->setOverrideCursor(Qt::ArrowCursor);
 	if(_videoWidgetWindow != 0)
 	{
 		releaseMouse();
@@ -68,6 +71,7 @@ void VideoWidget::mousePressEvent(QMouseEvent* event)
 
 void VideoWidget::mouseMoveEvent(QMouseEvent* event)
 {
+	qApp->setOverrideCursor(Qt::ArrowCursor);
     if(_videoWidgetWindow != 0)
 	{
 		releaseMouse();
