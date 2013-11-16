@@ -266,7 +266,7 @@ void MainWin::quitFullscreen()
 void MainWin::setCenter()
 {
 	QDesktopWidget *desktop = QApplication::desktop();
-	_videoWidgetWindow->setGeometry((desktop->screen(desktop->screenNumber(_videoFrame))->size().width() / 2) - (900 / 2) + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().x(), desktop->screen(desktop->screenNumber(_videoFrame))->size().height() - 75, 900, 75);
+	_videoWidgetWindow->setGeometry((desktop->screen(desktop->screenNumber(_videoFrame))->size().width() / 2) - (900 / 2) + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().x(), desktop->screen(desktop->screenNumber(_videoFrame))->size().height() - 75 + desktop->screen(desktop->screenNumber(_videoFrame))->geometry().y(), 900, 75);
 	_videoWidgetWindow->show();
 	
 }
@@ -582,7 +582,7 @@ VideoWidgetWindow::VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* p
 	Qt::WindowFlags flags = windowFlags();
 	setWindowFlags(Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 	
-	currentState(_mediaPlayer->state());
+	setCurrentState(_mediaPlayer->state());
 	
 	durationChanged(_mediaPlayer->duration());
 	connect(_playPauseButton, SIGNAL(clicked()), _mainWin, SLOT(playPause()));
@@ -616,6 +616,28 @@ void VideoWidgetWindow::currentState(QMediaPlayer::State state)
 		case QMediaPlayer::StoppedState:
 			_playPauseButton->setIcon(QIcon::fromTheme("media-playback-start"));
 			_mainWin->quitFullscreen();
+			break;
+			
+		default:
+			break;
+	}
+}
+
+void VideoWidgetWindow::setCurrentState(QMediaPlayer::State state)
+{
+	switch(state)
+	{
+		case QMediaPlayer::PausedState:
+			_playPauseButton->setIcon(QIcon::fromTheme("media-playback-start"));
+			break;
+		
+		case QMediaPlayer::PlayingState:
+			_playPauseButton->setIcon(QIcon::fromTheme("media-playback-pause"));
+			
+			break;
+			
+		case QMediaPlayer::StoppedState:
+			_playPauseButton->setIcon(QIcon::fromTheme("media-playback-start"));
 			break;
 			
 		default:

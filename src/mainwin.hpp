@@ -115,6 +115,7 @@ public:
     VideoWidgetWindow(QMediaPlayer* mediaPlayer, PlaylistModel* playlistModel, VideoWidget* videoframe, MainWin* mainWin);
 	
 public slots:
+	void setCurrentState(QMediaPlayer::State state);
 	void currentState(QMediaPlayer::State state);
 	void positionChanged(qint64 pos);
 	void seekChanged(int pos);
